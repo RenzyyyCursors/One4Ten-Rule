@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One4Ten Tracker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Premium Header Card (Clickable to switch to Roadmap) -->
+    <header class="header-card" id="top-header-clickable" title="Click to view full 435+ problems roadmap">
+      <div class="header-top-row">
+        <div class="brand">
+          <span class="brand-badge">1410</span>
+          <span class="brand-name">One4Ten</span>
+        </div>
+        <div class="day-selector" id="day-selector-box">
+          <button id="btn-prev-day" class="day-btn" title="Previous Day">‹</button>
+
+          <span class="day-text" id="current-day-num">Day 1</span>
+          <button id="btn-next-day" class="day-btn" title="Next Day">›</button>
+
+        </div>
+      </div>
+
+      <!-- Integrated Subtle Progress Bar -->
+      <div class="header-progress-box">
+        <div class="progress-labels">
+          <span class="progress-title">Roadmap Progress</span>
+          <span class="progress-val" id="overall-progress-text">0% (0/435)</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="overall-progress-bar" style="width: 0%;"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+      <button class="nav-item active" data-tab="tab-today">
+        <span>Today</span>
+        <span class="nav-count" id="today-queue-count">0</span>
+      </button>
+      <button class="nav-item" data-tab="tab-roadmap" id="btn-tab-roadmap">
+        <span>Roadmap</span>
+      </button>
+      <button class="nav-item" data-tab="tab-timer">
+        <span>Timer</span>
+      </button>
+      <button class="nav-item" data-tab="tab-stats">
+        <span>Stats</span>
+      </button>
+    </nav>
+
+    <!-- Tab 1: Today Queue & Backlog -->
+    <section id="tab-today" class="tab-pane active">
+      <div class="queue-status-bar">
+        <div class="status-left">
+          <span class="status-dot"></span>
+          <span class="status-text" id="queue-banner-text">Day 1: 1 Problem (1 New)</span>
+        </div>
+        <button id="btn-reset-day-override" class="btn-text-sm" style="display:none;">Reset</button>
+      </div>
+
+      <div class="task-list" id="queue-list-container">
+        <!-- Tasks rendered dynamically -->
+      </div>
+
+      <!-- Missed Backlog Section -->
+      <div class="backlog-card" id="backlog-wrapper" style="display: none;">
+        <div class="backlog-bar">
+          <span class="backlog-badge">OVERDUE</span>
+          <span class="backlog-count" id="backlog-count">0 missed</span>
+        </div>
+        <div class="task-list" id="backlog-list-container">
+          <!-- Backlog tasks rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: 16 Topics Roadmap -->
+    <section id="tab-roadmap" class="tab-pane">
+      <div class="search-filter-box">
+        <input type="text" id="roadmap-search" class="search-input" placeholder="Search title or number...">
+        <div class="filter-group">
+          <select id="filter-category" class="select-box">
+            <option value="ALL">All Categories</option>
+          </select>
+          <select id="filter-difficulty" class="select-box">
+            <option value="ALL">All Difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="accordion-list" id="roadmap-accordion">
+        <!-- Categories rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Tab 3: OA Timer -->
+    <section id="tab-timer" class="tab-pane">
+      <div class="timer-widget">
+        <div class="timer-segmented">
+          <button class="segment-btn active" data-mins="15">Easy 15m</button>
+          <button class="segment-btn" data-mins="30">Medium 30m</button>
+          <button class="segment-btn" data-mins="45">Hard 45m</button>
+        </div>
+
+        <div class="timer-time" id="popup-clock">30:00</div>
+
+        <div class="timer-actions">
+          <button class="btn-main" id="popup-timer-start">Start Timer</button>
+          <button class="btn-sub" id="popup-timer-pause">Pause</button>
+          <button class="btn-sub" id="popup-timer-reset">Reset</button>
+        </div>
+
+        <div class="timer-hint">Auto-synced with LeetCode floating widget</div>
+      </div>
+    </section>
+
+    <!-- Tab 4: Stats & Settings -->
+    <section id="tab-stats" class="tab-pane">
+      <div class="stats-row">
+        <div class="mini-stat">
+          <span class="mini-val" id="stat-total-new">0</span>
+          <span class="mini-label">New Solved</span>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-val" id="stat-total-rev4">0</span>
+          <span class="mini-label">Day-4 Reviews</span>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-val" id="stat-total-rev10">0</span>
+          <span class="mini-label">Day-10 Reviews</span>
+        </div>
+      </div>
+
+      <div class="settings-box">
+        <div class="settings-title">Journey Settings</div>
+        <div class="setting-row">
+          <span>Start Date</span>
+          <input type="date" id="setting-start-date" class="date-box">
+        </div>
+        <div class="setting-buttons">
+          <button class="btn-sub-sm" id="btn-export-data">Export JSON</button>
+          <button class="btn-sub-sm" id="btn-import-data">Import Backup</button>
+          <input type="file" id="file-import-input" accept=".json" style="display:none;">
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes Modal -->
+    <div id="notes-modal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-head">
+          <span class="modal-title" id="notes-problem-title">Problem Notes</span>
+          <button id="notes-modal-close" class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <textarea id="notes-textarea" placeholder="Intuition, pattern tricks, space/time complexity..."></textarea>
+        </div>
+        <div class="modal-foot">
+          <button id="notes-save-btn" class="btn-main-sm">Save Notes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="problems.js"></script>
+  <script src="storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
